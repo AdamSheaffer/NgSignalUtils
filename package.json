@@ -1,6 +1,15 @@
 {
   "name": "ng-signal-utils",
   "version": "0.0.0",
+  "description": "A library for helpful Angular signal based utilities",
+  "author": "Adam Sheaffer",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamsheaffer/ng-signal-utils.git"
+  },
+  "keywords": ["angular", "ng", "signals"],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,6 +31,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^19.2.4",
     "@angular/cli": "^19.2.4",
     "@angular/compiler-cli": "^19.2.0",
     "@types/jasmine": "~5.1.0",
@@ -31,6 +41,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^19.2.0",
     "typescript": "~5.7.2"
   }
 }
