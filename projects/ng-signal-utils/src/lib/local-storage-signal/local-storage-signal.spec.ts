@@ -1,7 +1,7 @@
 import { Injector } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { localStorageSignal as sutOriginal } from '.';
 import { withInjectionContext } from '../../utils/testing/withInjectionContext';
-import { localStorageSignal as sutOriginal } from './';
 
 describe('localStorageSignal', () => {
   let localStorageSignal: typeof sutOriginal;

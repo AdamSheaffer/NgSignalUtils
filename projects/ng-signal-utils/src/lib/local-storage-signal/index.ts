@@ -1,4 +1,4 @@
-import { effect, signal } from '@angular/core';
+import { storageSignal } from '../../utils/storageSignal';
 /**
  * Creates a writable signal that synchronizes with localStorage.
  * Values are serialized to JSON when storing and parsed when retrieving.
@@ -29,27 +29,5 @@ import { effect, signal } from '@angular/core';
 export function localStorageSignal<
   TValue extends string | number | boolean | object | null | Array<any>
 >(key: string) {
-  let parsedValue: TValue | null = null;
-
-  try {
-    const rawValue = window.localStorage.getItem(key);
-    if (rawValue !== null) {
-      parsedValue = JSON.parse(rawValue) as TValue;
-    }
-  } catch (error) {
-    console.error(`Error parsing localStorage value for key "${key}":`, error);
-  }
-
-  const storageSignal = signal<TValue | null>(parsedValue);
-
-  effect(() => {
-    const value = storageSignal();
-    if (value === null) {
-      localStorage.removeItem(key);
-    } else {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-  });
-
-  return storageSignal;
+  return storageSignal<TValue>(window.localStorage, key);
 }
