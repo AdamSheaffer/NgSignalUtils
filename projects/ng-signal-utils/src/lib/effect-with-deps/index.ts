@@ -39,7 +39,7 @@ import {
  */
 export function effectWithDeps<T extends Signal<any>>(
   deps: T[],
-  effectFn: () => void,
+  effectFn: () => any,
   options: {
     /**
      * Automatically manage effect lifecycle
