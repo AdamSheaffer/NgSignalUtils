@@ -35,9 +35,8 @@ export function managedSignalHistory<T>(
   options: SignalHistoryOptions = {}
 ) {
   const { maxHistory = Number.MAX_SAFE_INTEGER } = options;
-  const history = signal<T[]>([source()]);
+  const history = signal<T[]>([]);
   const activeHistoryIndex = signal(0);
-
   const activeItem = computed(() => history()[activeHistoryIndex()]);
 
   const hasPreviousValue = computed(() => activeHistoryIndex() > 0);
@@ -49,9 +48,11 @@ export function managedSignalHistory<T>(
    * Adds the current state of the source signal to the history
    */
   function commit() {
+    const currentHistory = history().slice(0, activeHistoryIndex() + 1);
+
+    if (source() === currentHistory[currentHistory.length - 1]) return;
+
     history.update((h) => {
-      // Slice to the current index to handle mid-history edits
-      const currentHistory = h.slice(0, activeHistoryIndex() + 1);
       const updatedHistory = [...currentHistory, source()];
       return updatedHistory.slice(-maxHistory);
     });
@@ -67,7 +68,9 @@ export function managedSignalHistory<T>(
     if (!hasPreviousValue()) return;
 
     activeHistoryIndex.update((i) => i - 1);
-    source.set(activeItem());
+    if (source() !== activeItem()) {
+      source.set(activeItem());
+    }
   }
 
   /**
@@ -78,7 +81,9 @@ export function managedSignalHistory<T>(
     if (!hasNextValue()) return;
 
     activeHistoryIndex.update((i) => i + 1);
-    source.set(activeItem());
+    if (source() !== activeItem()) {
+      source.set(activeItem());
+    }
   }
 
   /**
@@ -95,5 +100,6 @@ export function managedSignalHistory<T>(
     undo,
     redo,
     clear,
+    activeHistoryIndex,
   };
 }

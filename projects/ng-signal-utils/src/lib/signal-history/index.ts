@@ -46,6 +46,7 @@ export function signalHistory<T>(
 
   return {
     values: history.values,
+    activeHistoryIndex: history.activeHistoryIndex,
     undo: history.undo,
     redo: history.redo,
     clear: history.clear,

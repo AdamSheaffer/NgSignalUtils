@@ -17,8 +17,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "build:lib": "ng build ng-signal-utils",
+    "watch:lib": "ng build ng-signal-utils --watch --configuration development",
+    "build:playground": "ng build playground",
     "test": "ng test"
   },
   "private": true,

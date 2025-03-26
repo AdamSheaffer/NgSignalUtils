@@ -18,6 +18,7 @@ describe('signalHistory', () => {
   it('should undo the last change', () => {
     const state = signal('');
     const history = signalHistory(state);
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -38,6 +39,7 @@ describe('signalHistory', () => {
   it('should keep correct ordering when calling undo at history start and redo at end', () => {
     const state = signal('');
     const history = signalHistory(state);
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -64,6 +66,7 @@ describe('signalHistory', () => {
   it('should redo the last change after an undo', () => {
     const state = signal('');
     const history = signalHistory(state);
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -85,6 +88,7 @@ describe('signalHistory', () => {
   it('should track all history values', () => {
     const state = signal('');
     const history = signalHistory(state);
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -104,6 +108,7 @@ describe('signalHistory', () => {
   it('should slice history values after mid history edits', () => {
     const state = signal('');
     const history = signalHistory(state);
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -137,6 +142,7 @@ describe('signalHistory', () => {
   it('should release old history values when at capacity', () => {
     const state = signal('');
     const history = signalHistory(state, { maxHistory: 2 });
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -151,6 +157,7 @@ describe('signalHistory', () => {
   it('should clear history', () => {
     const state = signal('');
     const history = signalHistory(state, { maxHistory: 2 });
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();
@@ -167,6 +174,7 @@ describe('signalHistory', () => {
   it('should stop tracking history once `stop` is called', () => {
     const state = signal('');
     const history = signalHistory(state);
+    TestBed.flushEffects();
 
     state.set('first edit');
     TestBed.flushEffects();

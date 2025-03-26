@@ -45,7 +45,9 @@ export function debouncedEffect(
     trailing: !immediate,
   });
 
-  const effectInstance = effect(() => debouncedFunction());
+  const effectInstance = effect(() => {
+    debouncedFunction();
+  });
 
   if (autoDestroy) {
     const destroyRef = inject(DestroyRef, { optional: true });

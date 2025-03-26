@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { managedSignalHistory as sutOriginal } from '.';
 import { withInjectionContext } from '../../utils/testing/withInjectionContext';
 
-describe('signalHistory', () => {
+describe('managedSignalHistory', () => {
   let managedSignalHistory: typeof sutOriginal;
 
   beforeEach(() => {
@@ -25,11 +25,9 @@ describe('signalHistory', () => {
     state.set('second edit');
     TestBed.flushEffects();
 
-    expect(history.values()).toEqual(['']);
-
     history.commit();
 
-    expect(history.values()).toEqual(['', 'second edit']);
+    expect(history.values()).toEqual(['second edit']);
   });
 
   it('should undo the last change', () => {
@@ -58,6 +56,7 @@ describe('signalHistory', () => {
   it('should keep correct ordering when calling undo at history start and redo at end', () => {
     const state = signal('');
     const history = managedSignalHistory(state);
+    history.commit();
 
     state.set('first edit');
     history.commit();
@@ -109,6 +108,7 @@ describe('signalHistory', () => {
   it('should track all history values', () => {
     const state = signal('');
     const history = managedSignalHistory(state);
+    history.commit();
 
     state.set('first edit');
     history.commit();
@@ -131,6 +131,7 @@ describe('signalHistory', () => {
   it('should slice history values after mid history edits', () => {
     const state = signal('');
     const history = managedSignalHistory(state);
+    history.commit();
 
     state.set('first edit');
     history.commit();
