@@ -1,72 +1,54 @@
+import { effect, untracked, type WritableSignal } from '@angular/core';
 import {
-  computed,
-  effect,
-  signal,
-  untracked,
-  type WritableSignal,
-} from '@angular/core';
+  managedSignalHistory,
+  type SignalHistoryOptions,
+} from '../managed-signal-history';
 
-interface SignalHistoryOptions {
-  maxHistory?: number;
-}
-
+/**
+ * Creates a history tracking mechanism for an Angular signal changes.
+ *
+ * This utility allows you to track changes to a signal, providing
+ * undo/redo functionality and maintaining a history of previous values.
+ *
+ * @template T The type of value stored in the signal
+ * @param source The original signal to track
+ * @param options Configuration options for history tracking
+ * @returns An object containing all history values and undo/redo methods
+ *
+ * @example
+ * const count = signal(0);
+ * const history = signalHistory(count);
+ *
+ * count.set(1);  // Add to history
+ * count.set(2);  // Add to history
+ *
+ * history.undo();  // Goes back to 1
+ * history.redo();  // Goes back to 2
+ */
 export function signalHistory<T>(
   source: WritableSignal<T>,
   options: SignalHistoryOptions = {}
 ) {
-  const { maxHistory = 100 } = options;
-  const history = signal<T[]>([source()]);
-  const activeHistoryIndex = signal(0);
-
-  const activeItem = computed(() => history()[activeHistoryIndex()]);
-
-  const hasPreviousValue = computed(() => activeHistoryIndex() > 0);
-  const hasNextValue = computed(
-    () => activeHistoryIndex() < history().length - 1
-  );
+  const history = managedSignalHistory(source, options);
 
   const effectInstance = effect(() => {
     const newValue = source();
-    untracked(() => {
-      history.update((h) => {
-        // Slice to the current index to handle mid-history edits
-        const currentHistory = h.slice(0, activeHistoryIndex() + 1);
-        const updatedHistory = [...currentHistory, newValue];
-        return updatedHistory.slice(-maxHistory);
-      });
-
-      activeHistoryIndex.set(Math.min(history().length - 1, maxHistory - 1));
-    });
+    untracked(() => history.commit());
   });
 
-  function undo() {
-    if (!hasPreviousValue()) return;
-
-    activeHistoryIndex.update((i) => i - 1);
-    source.set(activeItem());
-  }
-
-  function redo() {
-    if (!hasNextValue()) return;
-
-    activeHistoryIndex.update((i) => i + 1);
-    source.set(activeItem());
-  }
-
-  function clear() {
-    history.set([source()]);
-    activeHistoryIndex.set(0);
-  }
-
+  /**
+   * Stops tracking changes to the source signal
+   * Useful for cleanup and preventing memory leaks
+   */
   function stop() {
     effectInstance.destroy();
   }
 
   return {
-    values: history,
-    undo,
-    redo,
-    clear,
+    values: history.values,
+    undo: history.undo,
+    redo: history.redo,
+    clear: history.clear,
     stop,
   };
 }
