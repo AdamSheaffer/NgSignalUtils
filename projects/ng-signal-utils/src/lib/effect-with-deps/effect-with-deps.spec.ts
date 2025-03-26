@@ -1,4 +1,4 @@
-import { computed, Injector, signal } from '@angular/core';
+import { computed, DestroyRef, Injector, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { effectWithDeps as sutOriginal } from '.';
 import { withInjectionContext } from '../../utils/testing/withInjectionContext';
@@ -7,7 +7,9 @@ describe('effectWithDeps', () => {
   let effectWithDeps: typeof sutOriginal;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [DestroyRef],
+    });
     const testInjector = TestBed.inject(Injector);
 
     effectWithDeps = withInjectionContext(testInjector, sutOriginal);

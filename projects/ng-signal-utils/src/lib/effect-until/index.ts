@@ -23,12 +23,12 @@ import { DestroyRef, effect, inject } from '@angular/core';
  * // Disable auto-destroy if needed
  * effectUntil(
  *   () => trackSomeMetrics(),
- *   () => shouldStopTracking,
+ *   () => shouldStopTracking(),
  *   { autoDestroy: false }
  * );
  */
 export function effectUntil(
-  effectFn: () => void,
+  effectFn: () => any,
   predicate: () => boolean,
   options: {
     /**
